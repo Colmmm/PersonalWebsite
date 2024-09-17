@@ -1,36 +1,30 @@
-version: '3.7'
+version: '3.8'
 
 services:
   wordpress:
     image: wordpress:latest
     ports:
       - "8000:80"
+    container_name: personalwebsite_wordpress
     environment:
-      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: rootpassword
       WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_DB_USER: exampleuser
-      WORDPRESS_DB_PASSWORD: examplepass
     volumes:
-      - wordpress_data:/var/www/html
       - ./wp-content:/var/www/html/wp-content
-    networks:
-      - wordpress_network
+      - ./wp-config.php:/var/www/html/wp-config.php
+    depends_on:
+      - db
 
   db:
     image: mysql:5.7
+    container_name: personalwebsite_db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: wordpress
-      MYSQL_USER: exampleuser
-      MYSQL_PASSWORD: examplepass
     volumes:
       - db_data:/var/lib/mysql
-    networks:
-      - wordpress_network
 
 volumes:
-  wordpress_data:
   db_data:
-
-networks:
-  wordpress_network:
